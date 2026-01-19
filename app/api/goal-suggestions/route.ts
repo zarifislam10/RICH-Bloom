@@ -129,7 +129,7 @@ export async function POST(req: Request) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-goog-api-key": apiKey,
+          "x-goog-api-key": apiKey,
         },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
