@@ -1,3 +1,13 @@
+/**
+ * GOALS LIST PAGE (View All Goals)
+ * Route: /goals
+ * 
+ * This page displays all goals created by the logged-in user:
+ * - Shows goals in a card grid layout
+ * - Displays goal details: principle, text, progress, and reflection
+ * - Allows users to update progress and write reflections
+ * - Protected route (requires authentication)
+ */
 "use client"
 
 import { useEffect, useState } from "react"

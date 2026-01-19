@@ -1,3 +1,14 @@
+/**
+ * HOME PAGE (Create Goal Page)
+ * Route: / (root)
+ * 
+ * This is the main page where users can:
+ * - Select a RICH principle (I Matter, Responsibility, Considerate, Strategies)
+ * - Write a goal based on the selected principle
+ * - Get AI-powered guidance questions to help write better goals
+ * - Check for inappropriate content before submitting
+ * - Submit and save goals to the database
+ */
 "use client"
 
 import { useState } from "react"
