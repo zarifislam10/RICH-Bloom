@@ -64,47 +64,64 @@ export default function GoalPage() {
   const [selectedPrinciple, setSelectedPrinciple] = useState<Principle | null>(null)
   const [goalText, setGoalText] = useState("")
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [questions, setQuestions] = useState<string[]>([])
+  const [coachMessage, setCoachMessage] = useState<string>("")
+
 
   const handlePrincipleSelect = (principle: Principle) => {
     setSelectedPrinciple(principle)
     setGoalText("")
-    setSuggestions([])
+    setQuestions([])
   }
 
   const handleBack = () => {
     setSelectedPrinciple(null)
     setGoalText("")
-    setSuggestions([])
+    setQuestions([])
   }
 
   const generateSuggestions = async () => {
     if (!selectedPrinciple) return
     setIsLoadingSuggestions(true)
 
-    const mock = {
-      "i-matter": [
-        "I will practice positive self-talk every morning",
-        "I will celebrate one small achievement each day",
-      ],
-      responsibility: [
-        "I will complete my homework before recreational activities",
-        "I will keep my commitments to friends and family",
-      ],
-      considerate: [
-        "I will listen actively when others are speaking",
-        "I will offer help to classmates who are struggling",
-      ],
-      strategies: [
-        "I will break big tasks into smaller steps",
-        "I will use a planner to organize my time",
-      ],
+    setQuestions([])
+
+  try {
+    const res = await fetch("/api/goal-suggestions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        principleId: selectedPrinciple.id,
+        draft: goalText,
+      }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      console.error("Server error:", data)
+      alert("Failed to generate suggestions")
+      return
     }
 
-    setTimeout(() => {
-      setSuggestions(mock[selectedPrinciple.id as keyof typeof mock] || [])
-      setIsLoadingSuggestions(false)
-    }, 1500)
+    if (data.questions.length === 0) {
+      setCoachMessage(data.message)
+      setQuestions([])
+    } 
+    else {
+      setCoachMessage("")
+      setQuestions(data.questions)
+    }
+
+  } catch (err) {
+    console.error("Network error:", err)
+    alert("Network error")
+  } finally {
+    setIsLoadingSuggestions(false)
+  }
+   
   }
 
   const handleSubmitGoal = async () => {
@@ -125,17 +142,17 @@ export default function GoalPage() {
     } else {
       alert("Goal saved!")
       setGoalText("")
-      setSuggestions([])
+      setQuestions([])
     }
   }
 
   const renderSuggestions = () => {
-    if (suggestions.length === 0) return null
+    if (questions.length === 0) return null
     return (
       <div className="bg-purple-50 rounded-xl p-6 mt-6">
         <h3 className="text-xl font-bold text-purple-800 mb-4">💡 Suggestions:</h3>
         <div className="space-y-3">
-          {suggestions.map((s, i) => (
+          {questions.map((s, i) => (
             <div
               key={i}
               className="bg-white p-4 rounded-lg shadow-sm border border-purple-200 cursor-pointer hover:bg-purple-100"
@@ -246,7 +263,31 @@ export default function GoalPage() {
                         </Button>
                       </div>
       
-                      {renderSuggestions()}
+                     {coachMessage && (
+                        <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 p-4 rounded-xl text-lg">
+                          {coachMessage}
+                        </div>
+                      )}
+
+                      {questions.length > 0 && (
+                        <div className="bg-purple-50 rounded-xl p-6">
+                          <h3 className="text-xl font-bold text-purple-800 mb-4">
+                            💬 Guiding Questions
+                          </h3>
+
+                          <div className="space-y-3">
+                            {questions.map((q, i) => (
+                              <div
+                                key={i}
+                                className="bg-white p-4 rounded-lg shadow-sm border border-purple-200"
+                              >
+                                {q}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
       
                       <div className="flex justify-center pt-4">
                         <Button
