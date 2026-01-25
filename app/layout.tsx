@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
 import { AuthProvider } from "@/contexts/auth-context"
+import SetUsernameModal from "@/components/set-username-modal"
 
 export const metadata: Metadata = {
   title: "RICH Goal Tracker",
@@ -17,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <SetUsernameModal />
+        </AuthProvider>
       </body>
     </html>
   )

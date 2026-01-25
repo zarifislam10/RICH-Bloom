@@ -6,7 +6,7 @@ import { Plus, Target, LogOut } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 export default function Navigation() {
-  const { user, signOut } = useAuth()
+  const { user, username, signOut } = useAuth()
 
   return (
     <nav className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
@@ -15,7 +15,7 @@ export default function Navigation() {
           <div className="flex items-center space-x-8">
             <Link href="/" className="flex items-center space-x-2">
               
-              <span className="text-xl font-bold text-gray-900">Goal Tracker</span>
+              <span className="text-xl font-bold text-gray-900">RICH bloom</span>
             </Link>
             
             <div className="hidden md:flex items-center space-x-4">
@@ -37,7 +37,7 @@ export default function Navigation() {
           {user && (
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600 hidden sm:block">
-                Welcome, {user.email}
+                Welcome, {username || user.email?.split('@')[0] || 'User'}
               </span>
               <Button onClick={signOut} variant="outline" size="sm">
                 <LogOut className="w-4 h-4 mr-2" />

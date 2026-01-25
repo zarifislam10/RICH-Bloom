@@ -4,9 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Slider } from "@/components/ui/slider"
 import WriteReflectionButton from "./write-reflection-button"
-import { supabase } from "@/lib/supabase"
 import { Edit, Save, X } from "lucide-react"
 
 interface GoalCardProps {
@@ -23,7 +21,7 @@ export default function GoalCard({ goal }: GoalCardProps) {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   
-  // Use actual progress from the goal, defaulting to 0 if not set
+  // Progress is read-only - only updated by Google Classroom integration
   const progress = goal.progress || 0
 
   const getPrincipleColor = (principle: string) => {
@@ -70,12 +68,14 @@ export default function GoalCard({ goal }: GoalCardProps) {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Progress Bar */}
+          {/* Progress Bar (Read-Only) */}
           <div>
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-gray-600">Progress</span>
               <span className="text-sm font-bold text-gray-800">{progress}%</span>
             </div>
+            
+            {/* Visual Progress Bar - Updated automatically by Google Classroom */}
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-300 ${
@@ -86,6 +86,9 @@ export default function GoalCard({ goal }: GoalCardProps) {
                 style={{ width: `${progress}%` }}
               />
             </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Progress updates automatically when you submit assignments in Google Classroom
+            </p>
           </div>
 
           {/* Completion Status and Reflection Button */}
