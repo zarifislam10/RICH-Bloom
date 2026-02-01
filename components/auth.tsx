@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { signIn } from "next-auth/react"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -350,6 +351,16 @@ export default function Auth() {
               )}
             </Button>
 
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => signIn("google", { callbackUrl: "/" })}
+              disabled={loading}
+            >
+              Continue with Google
+            </Button>
+
             {/* Toggle Between Login/Sign Up */}
             <div className="text-center">
               <button
@@ -374,3 +385,4 @@ export default function Auth() {
     </div>
   )
 }
+
